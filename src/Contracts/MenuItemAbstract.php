@@ -43,7 +43,7 @@ abstract class MenuItemAbstract
 
     public function __construct()
     {
-        $this->registerFields();
+        add_action('acf/init', [$this, 'registerFields']);
         add_action('plugins_loaded', [$this, 'menuBoot']);
         add_filter('mitypes_item_types', [$this, 'addItemTypes']);
         add_filter('mitypes_nav_menu_link_attributes', [$this, 'itemAttributes'], 11, 5);
