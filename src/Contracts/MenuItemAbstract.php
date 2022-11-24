@@ -43,7 +43,10 @@ abstract class MenuItemAbstract
 
     public function __construct()
     {
-        add_action('acf/init', [$this, 'registerFields']);
+        if (function_exists('register_field_group')) {
+            $this->registerFields();
+        }
+        
         add_action('plugins_loaded', [$this, 'menuBoot']);
         add_filter('mitypes_item_types', [$this, 'addItemTypes']);
         add_filter('mitypes_nav_menu_link_attributes', [$this, 'itemAttributes'], 11, 5);
@@ -184,7 +187,7 @@ abstract class MenuItemAbstract
         return count($this->getItemAttributes()) > 0 ? array_merge($this->getItemAttributes(), $atts) : $atts;
     }
 
-    public function viewArgs(): array
+    public function viewArgs($item, $custom_item_type, $args, $depth): array
     {
         return [];
     }
@@ -208,7 +211,7 @@ abstract class MenuItemAbstract
                     'depth' => $depth,
                     'args' => $args,
                     'custom_item_type' => $custom_item_type
-                ], $this->viewArgs());
+                ], $this->viewArgs($item, $custom_item_type, $args, $depth));
                 return $this->render($this->getView(), $viewArgs);
             },
         ];
